@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <!-- ПР8: кодування та viewport завжди на самому початку -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ПР5: SEO мета-теги -->
+    <title>Fortnite — Карта острова та ігрова механіка</title>
+    <meta name="description"
+        content="Особистий сайт про Fortnite: інтерактивна карта острова, висадка з автобуса, будівництво, буря, рідкість зброї та поради для перемоги.">
+    <meta name="keywords" content="Fortnite, королівська битва, карта, будівництво, буря, зброя, ігрова механіка">
+    <meta name="author" content="Прізвище Ім'я">
+
+    <!-- ПР5: Open Graph для соцмереж -->
+    <meta property="og:title" content="Fortnite — Карта острова та ігрова механіка">
+    <meta property="og:description" content="Інтерактивна карта та розбір ігрової механіки Fortnite.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="images/battle-bus.svg">
+
+    <!-- ПР5: іконка вкладки (favicon) -->
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <!-- ПР2: підключення зовнішнього файлу стилів -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- ПР4 + ПР5: закріплена шапка з навігацією -->
+    <header class="site-header" id="main-header">
+        <div class="container header-container">
+            <a href="#hero" class="logo">FORT<span class="highlight">SITE</span></a>
+            <nav aria-label="Головне меню сайту">
+                <ul>
+                    <li><a href="#hero">Карта</a></li>
+                    <li><a href="#about">Про гру</a></li>
+                    <li><a href="#mechanics">Механіка</a></li>
+                    <li><a href="#weapons">Зброя</a></li>
+                    <li><a href="#gallery">Галерея</a></li>
+                    <li><a href="#contact">Відгук</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+
+        <!-- Секція 1: Hero з картою острова (ПР7: градієнт, ПР4: позиціонування) -->
+        <section id="hero" class="hero-section">
+            <div class="container">
+                <h1 id="page-title">Острів Fortnite</h1>
+                <p class="intro">Наведи курсор на карту — вона <em>розгорнеться</em>, як у грі перед висадкою.
+                    Обери точку і стрибай з автобуса!</p>
+
+                <!-- Карта: батьківський блок relative, точки всередині absolute -->
+                <div class="map">
+                    <span class="map-storm" aria-hidden="true"></span>
+                    <span class="map-bus-route" aria-hidden="true"></span>
+
+                    <a href="#about" class="map-point point-about">
+                        <span class="point-label">Про гру</span>
+                    </a>
+                    <a href="#mechanics" class="map-point point-mechanics">
+                        <span class="point-label">Механіка</span>
+                    </a>
+                    <a href="#weapons" class="map-point point-weapons">
+                        <span class="point-label">Зброя</span>
+                    </a>
+                    <a href="#gallery" class="map-point point-gallery">
+                        <span class="point-label">Галерея</span>
+                    </a>
+                    <a href="#contact" class="map-point point-contact">
+                        <span class="point-label">Відгук</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секція 2: Про гру (ПР1: текст, зображення, посилання; ПР5: aside) -->
+        <section id="about" class="section-alt">
+            <div class="container">
+                <h2 class="section-title">Що таке Fortnite?</h2>
+
+                <article class="card">
+                    <img src="images/battle-bus.svg" alt="Літаючий автобус над островом, з якого гравці стрибають на карту"
+                        class="main-image">
+                    <p><strong>Fortnite</strong> — це онлайн-гра у жанрі <em>королівська битва</em>, яку створила
+                        компанія Epic Games у 2017 році. На острів висаджується 100 гравців, і перемагає той, хто
+                        залишиться останнім.</p>
+                    <p>Головна особливість гри — <span class="highlight">будівництво</span>. Гравець може за
+                        секунди звести стіну, сходи чи цілу вежу, щоб захиститися або отримати перевагу по висоті.</p>
+                    <p>Більше інформації можна знайти на
+                        <a href="https://uk.wikipedia.org/wiki/Fortnite" target="_blank">сторінці у Вікіпедії</a>.
+                    </p>
+                </article>
+
+                <aside>
+                    <h3>Цікавий факт</h3>
+                    <p>Автобус, з якого гравці стрибають на острів, тримається у повітрі завдяки звичайній
+                        повітряній кулі.</p>
+                </aside>
+            </div>
+        </section>
+
+        <!-- Секція 3: Ігрова механіка (ПР4: Grid карток; ПР1: списки) -->
+        <section id="mechanics">
+            <div class="container">
+                <h2 class="section-title">Ігрова механіка</h2>
+
+                <div class="cards-grid">
+                    <article class="card">
+                        <h3>Висадка</h3>
+                        <p>Матч починається в автобусі. Гравець сам обирає момент стрибка і точку приземлення.</p>
+                    </article>
+                    <article class="card">
+                        <span class="badge">ХІТ</span>
+                        <h3>Будівництво</h3>
+                        <p>З ресурсів будуються стіни, підлоги, сходи та дахи. Це і захист, і спосіб атаки.</p>
+                    </article>
+                    <article class="card">
+                        <h3>Буря</h3>
+                        <p>Безпечна зона постійно звужується. Хто залишився за її межами — втрачає здоров'я.</p>
+                    </article>
+                </div>
+
+                <div class="cards-grid lists-grid">
+                    <article class="card">
+                        <h3>Ресурси для будівництва</h3>
+                        <ul>
+                            <li>Дерево — будується швидко, але слабке</li>
+                            <li>Камінь — середня міцність</li>
+                            <li>Метал — найміцніший, але будується довго</li>
+                        </ul>
+                    </article>
+                    <article class="card">
+                        <h3>Етапи матчу</h3>
+                        <ol>
+                            <li>Стрибок з автобуса</li>
+                            <li>Збирання зброї та ресурсів</li>
+                            <li>Рух за безпечною зоною</li>
+                            <li>Фінальний бій за перемогу</li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секція 4: Зброя — таблиця (ПР1 + ПР3) -->
+        <section id="weapons" class="section-alt">
+            <div class="container">
+                <h2 class="section-title">Рідкість зброї</h2>
+
+                <article class="card table-card">
+                    <span class="badge">ТОП</span>
+                    <table>
+                        <tr>
+                            <th>Рідкість</th>
+                            <th>Колір</th>
+                            <th>Де знайти</th>
+                        </tr>
+                        <tr>
+                            <td>Звичайна</td>
+                            <td><span class="rarity rarity-common">Сірий</span></td>
+                            <td>На підлозі в будинках</td>
+                        </tr>
+                        <tr>
+                            <td>Незвичайна</td>
+                            <td><span class="rarity rarity-uncommon">Зелений</span></td>
+                            <td>На підлозі та у скринях</td>
+                        </tr>
+                        <tr>
+                            <td>Рідкісна</td>
+                            <td><span class="rarity rarity-rare">Синій</span></td>
+                            <td>У скринях</td>
+                        </tr>
+                        <tr>
+                            <td>Епічна</td>
+                            <td><span class="rarity rarity-epic">Фіолетовий</span></td>
+                            <td>У скринях та запасах з неба</td>
+                        </tr>
+                        <tr>
+                            <td>Легендарна</td>
+                            <td><span class="rarity rarity-legendary">Золотий</span></td>
+                            <td>У запасах з неба та у босів</td>
+                        </tr>
+                    </table>
+                </article>
+            </div>
+        </section>
+
+        <!-- Секція 5: Галерея (ПР4: CSS Grid; ПР7: збільшення фото) -->
+        <section id="gallery">
+            <div class="container">
+                <h2 class="section-title">Галерея</h2>
+
+                <div class="grid-gallery">
+                    <div class="gallery-item">
+                        <img src="images/chest.svg" alt="Золота скриня з лутом, що світиться">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/storm.svg" alt="Фіолетова буря, що звужує безпечну зону">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/pickaxe.svg" alt="Кирка для збирання ресурсів">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/build.svg" alt="Дерев'яна стіна та сходи, побудовані гравцем">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/battle-bus.svg" alt="Синій літаючий автобус на повітряній кулі">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/favicon.svg" alt="Жовта мітка точки висадки на карті">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секція 6: Форма відгуку (ПР6) -->
+        <section id="contact" class="section-alt">
+            <div class="container">
+                <h2 class="section-title">Залишити відгук</h2>
+
+                <form action="#" method="POST">
+                    <label for="user-name">Нікнейм</label>
+                    <input type="text" id="user-name" name="user_name" placeholder="Наприклад: NoScope2026" required>
+
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" name="user_email" placeholder="name@example.com" required>
+
+                    <label for="mode">Улюблений режим</label>
+                    <select id="mode" name="mode">
+                        <option value="" disabled selected>--- Оберіть варіант ---</option>
+                        <option value="battle-royale">Королівська битва</option>
+                        <option value="zero-build">Без будівництва</option>
+                        <option value="creative">Творчий режим</option>
+                    </select>
+
+                    <label for="message">Ваш відгук</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Що вам подобається у грі?"></textarea>
+
+                    <fieldset>
+                        <legend>Як з вами зв'язатися?</legend>
+                        <div class="radio-option">
+                            <input type="radio" id="reply-email" name="reply" value="email" checked>
+                            <label for="reply-email" class="inline-label">Відповісти на Email</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="reply-phone" name="reply" value="phone">
+                            <label for="reply-phone" class="inline-label">Зателефонувати</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms" class="inline-label">Я погоджуюсь на обробку персональних даних</label>
+                    </div>
+
+                    <button type="submit">Надіслати відгук</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ПР5: підвал сайту -->
+    <footer>
+        <div class="container">
+            <p>Автор: Прізвище Ім'я · 2026 · Дисципліна «Основи web-розробки»</p>
+            <p>Контакти: <a href="mailto:name@example.com">name@example.com</a></p>
+        </div>
+    </footer>
+
+    <!-- ПР4 + ПР5: плаваюча кнопка нагору -->
+    <a href="#hero" class="btn-top" aria-label="Повернутися на початок сторінки">↑</a>
+</body>
+
+</html>

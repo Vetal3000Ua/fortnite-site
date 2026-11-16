@@ -1,0 +1,755 @@
+/* =========================================================
+   ПР3: Глобальне скидання та модель border-box
+   ========================================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ПР4: плавний скрол та компенсація фіксованої шапки */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+/* =========================================================
+   ПР2: Загальні правила сторінки
+   ========================================================= */
+body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding-top: 70px;
+    /* ПР8: прибираємо горизонтальний скрол */
+    overflow-x: hidden;
+}
+
+/* ПР8: гумові зображення */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ПР5: нові семантичні елементи — блокові */
+header,
+nav,
+main,
+section,
+article,
+aside,
+footer {
+    display: block;
+}
+
+/* =========================================================
+   ПР2: Заголовки
+   ========================================================= */
+h1 {
+    font-size: 56px;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+h2 {
+    font-size: 36px;
+    font-weight: 800;
+    text-align: center;
+    color: #ffd60a;
+    margin-bottom: 30px;
+}
+
+h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+/* ПР2: Текстові елементи */
+p {
+    margin-bottom: 12px;
+}
+
+.intro {
+    font-size: 20px;
+    text-align: center;
+    max-width: 640px;
+    margin: 15px auto 40px;
+}
+
+strong {
+    color: #ffd60a;
+}
+
+em {
+    color: #7dd3fc;
+}
+
+.highlight {
+    background-color: #ffd60a;
+    color: #0f172a;
+    padding: 0 6px;
+    border-radius: 4px;
+}
+
+/* ПР2: Посилання */
+a {
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffd60a;
+    text-decoration: underline;
+}
+
+/* ПР2: Списки */
+ul {
+    list-style-type: square;
+    margin-left: 20px;
+}
+
+ol {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
+
+li {
+    color: #cbd5e1;
+    margin-bottom: 6px;
+}
+
+/* =========================================================
+   ПР3: Контейнер та картки
+   ========================================================= */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.card {
+    position: relative;
+    /* ПР4: батьківський блок для бейджа */
+    background-color: #1e293b;
+    padding: 20px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    /* ПР7: об'ємна тінь */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    /* ПР7: перехід оголошуємо у базовому стані */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.main-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* ПР3: Таблиця */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px 12px;
+    border: 1px solid #334155;
+    text-align: left;
+}
+
+th {
+    background-color: #ffd60a;
+    color: #0f172a;
+}
+
+/* Кольори рідкості зброї */
+.rarity {
+    padding: 2px 10px;
+    border-radius: 4px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.rarity-common {
+    background-color: #6b7280;
+}
+
+.rarity-uncommon {
+    background-color: #15803d;
+}
+
+.rarity-rare {
+    background-color: #2563eb;
+}
+
+.rarity-epic {
+    background-color: #9333ea;
+}
+
+.rarity-legendary {
+    background-color: #b45309;
+}
+
+/* =========================================================
+   ПР4: Закріплена шапка (Flexbox)
+   ========================================================= */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0b1026;
+    border-bottom: 3px solid #ffd60a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 67px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.logo:hover {
+    text-decoration: none;
+}
+
+header nav ul {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin-left: 0;
+}
+
+header nav li {
+    margin-bottom: 0;
+}
+
+header nav a {
+    position: relative;
+    display: block;
+    padding: 10px 12px;
+    color: #e2e8f0;
+    font-weight: bold;
+    /* ПР7: перехід у базовому стані */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* ПР7: анімована лінія під посиланням */
+header nav a::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 2px;
+    background-color: #ffd60a;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+header nav a:hover {
+    color: #ffd60a;
+    text-decoration: none;
+    text-shadow: 0 0 8px rgba(255, 214, 10, 0.5);
+}
+
+header nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* =========================================================
+   ПР4: Секції та чергування фонів
+   ========================================================= */
+section {
+    padding: 80px 20px;
+}
+
+.section-alt {
+    background-color: #1e1b4b;
+}
+
+/* =========================================================
+   ПР7: Hero-секція з градієнтом
+   ========================================================= */
+.hero-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 50%, #db2777 100%);
+    color: #ffffff;
+}
+
+.hero-section h1 {
+    text-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+
+.hero-section em {
+    color: #ffd60a;
+}
+
+/* =========================================================
+   Карта острова (ПР4: relative + absolute, ПР7: transform)
+   ========================================================= */
+.map {
+    position: relative;
+    max-width: 760px;
+    height: 460px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 6px solid #ffffff;
+    border-radius: 16px;
+    /* Сітка карти + острів + вода (градієнти ПР7) */
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+        radial-gradient(circle at 30% 32%, #f1f5f9 0%, #cbd5e1 6%, transparent 7%),
+        radial-gradient(circle at 68% 62%, #a3e635 0%, #65a30d 9%, transparent 10%),
+        radial-gradient(ellipse 42% 40% at 50% 50%, #22c55e 0%, #16a34a 88%, #fde68a 92%, #38bdf8 97%, #0369a1 140%);
+    background-size: 10% 10%, 10% 10%, 100% 100%, 100% 100%, 100% 100%;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
+    /* Карта "складена": нахилена та зменшена */
+    transform: perspective(1000px) rotateX(45deg) scale(0.85);
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+/* Карта "розгортається" при наведенні */
+.map:hover {
+    transform: perspective(1000px) rotateX(0deg) scale(1);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* Буря: все за межами кола затемнюється фіолетовим */
+.map-storm {
+    position: absolute;
+    top: 8%;
+    left: 18%;
+    width: 64%;
+    height: 84%;
+    border: 4px solid #c084fc;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1000px rgba(126, 34, 206, 0.35);
+    transition: transform 0.6s ease;
+}
+
+/* При розгортанні карти буря звужується */
+.map:hover .map-storm {
+    transform: scale(0.85);
+}
+
+/* Маршрут автобуса — пунктирна лінія */
+.map-bus-route {
+    position: absolute;
+    top: 50%;
+    left: -10%;
+    width: 120%;
+    border-top: 3px dashed #ffd60a;
+    transform: rotate(-25deg);
+}
+
+/* Точки висадки на карті */
+.map-point {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background-color: #ffd60a;
+    border: 3px solid #0f172a;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(255, 214, 10, 0.4);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.map-point:hover {
+    transform: scale(1.25);
+    background-color: #ffffff;
+    text-decoration: none;
+}
+
+/* Підпис точки — над кружечком */
+.point-label {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2px 8px;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.point-about {
+    top: 30%;
+    left: 38%;
+}
+
+.point-mechanics {
+    top: 44%;
+    left: 60%;
+}
+
+.point-weapons {
+    top: 62%;
+    left: 30%;
+}
+
+.point-gallery {
+    top: 24%;
+    left: 60%;
+}
+
+.point-contact {
+    top: 72%;
+    left: 52%;
+}
+
+/* =========================================================
+   ПР4: Grid для карток та галереї
+   ========================================================= */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.cards-grid .card {
+    margin-bottom: 0;
+}
+
+.lists-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* ПР4: Бейдж (локальне позиціонування) */
+.badge {
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    padding: 4px 12px;
+    background-color: #ffd60a;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 900;
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ПР4 + ПР7: Галерея */
+.grid-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    border: 3px solid #334155;
+    border-radius: 8px;
+    background-color: #1e293b;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.4s ease-out;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.08);
+}
+
+/* =========================================================
+   ПР5 + ПР7: Довідковий блок aside
+   ========================================================= */
+aside {
+    background: radial-gradient(circle at top left, #fef9c3, #fde68a);
+    color: #422006;
+    border-left: 6px solid #f59e0b;
+    border-radius: 8px;
+    padding: 20px;
+    font-style: italic;
+}
+
+aside h3 {
+    color: #422006;
+}
+
+/* =========================================================
+   ПР6: Форма
+   ========================================================= */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 18px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    /* ПР7: внутрішня тінь */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ПР6: стан фокусу */
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #ffd60a;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.3);
+}
+
+fieldset {
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+}
+
+legend {
+    padding: 0 6px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.radio-option {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.inline-label {
+    display: inline;
+    font-weight: normal;
+}
+
+.checkbox-row {
+    margin-bottom: 20px;
+}
+
+/* ПР6 + ПР7: Кнопка відправлення */
+button[type="submit"] {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    background-image: linear-gradient(to right, #2563eb, #7c3aed);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.45);
+}
+
+button[type="submit"]:active {
+    transform: translateY(1px);
+}
+
+/* =========================================================
+   ПР5: Підвал
+   ========================================================= */
+footer {
+    background-color: #020617;
+    border-top: 3px solid #ffd60a;
+    padding: 30px 0;
+    text-align: center;
+    color: #94a3b8;
+}
+
+/* =========================================================
+   ПР4: Плаваюча кнопка нагору
+   ========================================================= */
+.btn-top {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffd60a;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-top:hover {
+    background-color: #ffffff;
+    color: #0f172a;
+    text-decoration: none;
+    transform: translateY(-4px);
+}
+
+/* =========================================================
+   ПР8: Планшети
+   ========================================================= */
+@media screen and (max-width: 1024px) {
+    .cards-grid,
+    .grid-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    section {
+        padding: 50px 10px;
+    }
+
+    .hero-section h1 {
+        font-size: 44px;
+    }
+
+    .map {
+        height: 400px;
+    }
+}
+
+/* =========================================================
+   ПР8: Смартфони
+   ========================================================= */
+@media screen and (max-width: 768px) {
+    html {
+        scroll-padding-top: 150px;
+    }
+
+    body {
+        padding-top: 140px;
+    }
+
+    .header-container {
+        flex-direction: column;
+        gap: 4px;
+        padding: 8px 15px;
+    }
+
+    header nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .cards-grid,
+    .lists-grid,
+    .grid-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    form {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .radio-option {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    /* На телефоні немає наведення — карта одразу розгорнута */
+    .map {
+        height: 320px;
+        transform: none;
+    }
+
+    .map-point {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* =========================================================
+   ПР8: Компактні телефони
+   ========================================================= */
+@media screen and (max-width: 480px) {
+    h1,
+    .hero-section h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .intro {
+        font-size: 16px;
+    }
+
+    .btn-top {
+        width: 40px;
+        height: 40px;
+        right: 15px;
+        bottom: 15px;
+    }
+
+    .badge {
+        top: -8px;
+        right: 10px;
+        font-size: 11px;
+    }
+
+    .point-label {
+        font-size: 11px;
+    }
+
+    th,
+    td {
+        padding: 8px 6px;
+        font-size: 14px;
+    }
+}
