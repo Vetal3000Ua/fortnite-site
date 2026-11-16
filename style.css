@@ -153,8 +153,12 @@ li {
 }
 
 .main-image {
+    width: 100%;
     max-width: 100%;
-    height: auto;
+    height: 380px;
+    /* ПР4: фото заповнює блок без спотворень */
+    object-fit: cover;
+    border: 3px solid #ffd60a;
     border-radius: 6px;
     margin-bottom: 20px;
 }
@@ -604,6 +608,12 @@ footer {
     padding: 30px 0;
     text-align: center;
     color: #94a3b8;
+}
+
+/* Підпис авторів фото (вимога ліцензій CC) */
+.credits {
+    font-size: 13px;
+    color: #64748b;
 }
 
 /* =========================================================
