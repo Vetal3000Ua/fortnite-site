@@ -24,6 +24,11 @@
 
     <!-- ПР2: підключення зовнішнього файлу стилів -->
     <link rel="stylesheet" href="style.css">
+    <!-- Стилі інтерактивної карти, скринь і колекції -->
+    <link rel="stylesheet" href="map.css">
+
+    <!-- Логіка скринь і колекції (defer — запуститься після завантаження HTML) -->
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -38,6 +43,7 @@
                     <li><a href="#mechanics">Механіка</a></li>
                     <li><a href="#weapons">Зброя</a></li>
                     <li><a href="#gallery">Галерея</a></li>
+                    <li><a href="#collection">Колекція</a></li>
                     <li><a href="#contact">Відгук</a></li>
                 </ul>
             </nav>
@@ -51,13 +57,44 @@
             <div class="container">
                 <h1 id="page-title">Острів Fortnite</h1>
                 <p class="intro">Наведи курсор на карту — вона <em>розгорнеться</em>, як у грі перед висадкою.
-                    Обери точку і стрибай з автобуса!</p>
+                    Обери точку висадки або відкривай <strong>скрині</strong>: чим довше ти обираєш,
+                    тим більша удача і шанс знайти <strong>золотий токен</strong>!</p>
 
-                <!-- Карта: батьківський блок relative, точки всередині absolute -->
-                <div class="map">
+                <!-- Карта: батьківський блок relative, усе всередині — absolute -->
+                <div class="map" id="map">
+                    <!-- Острів з біомами (суто декоративний) -->
+                    <div class="map-island" aria-hidden="true">
+                        <span class="biome biome-snow"></span>
+                        <span class="biome biome-forest"></span>
+                        <span class="biome biome-desert"></span>
+                        <span class="biome biome-lake"></span>
+                        <span class="map-river"></span>
+                    </div>
+
+                    <!-- Координатна сітка як у грі: A–J та 1–10 -->
+                    <div class="map-grid" aria-hidden="true"></div>
+                    <div class="map-coords map-coords-x" aria-hidden="true">
+                        <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
+                        <span>F</span><span>G</span><span>H</span><span>I</span><span>J</span>
+                    </div>
+                    <div class="map-coords map-coords-y" aria-hidden="true">
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                    </div>
+
+                    <!-- Назви локацій -->
+                    <span class="poi poi-snow" aria-hidden="true">Сніжна Вершина</span>
+                    <span class="poi poi-port" aria-hidden="true">Золотий Порт</span>
+                    <span class="poi poi-canyon" aria-hidden="true">Пустельний Каньйон</span>
+                    <span class="poi poi-bay" aria-hidden="true">Піратська Бухта</span>
+
+                    <!-- Буря та маршрут автобуса -->
                     <span class="map-storm" aria-hidden="true"></span>
-                    <span class="map-bus-route" aria-hidden="true"></span>
+                    <span class="map-bus-route" aria-hidden="true">
+                        <span class="map-bus">🚌</span>
+                    </span>
 
+                    <!-- Точки висадки — посилання на розділи сайту -->
                     <a href="#about" class="map-point point-about">
                         <span class="point-label">Про гру</span>
                     </a>
@@ -73,7 +110,29 @@
                     <a href="#contact" class="map-point point-contact">
                         <span class="point-label">Відгук</span>
                     </a>
+
+                    <!-- Скрині зі скарбами (їх відкриває script.js) -->
+                    <button type="button" class="map-chest chest-1" aria-label="Відкрити скриню"></button>
+                    <button type="button" class="map-chest chest-2" aria-label="Відкрити скриню"></button>
+                    <button type="button" class="map-chest chest-3" aria-label="Відкрити скриню"></button>
+                    <button type="button" class="map-chest chest-4" aria-label="Відкрити скриню"></button>
+                    <button type="button" class="map-chest chest-5" aria-label="Відкрити скриню"></button>
+
+                    <!-- HUD: шкала удачі та лічильник -->
+                    <div class="map-hud">
+                        <div class="luck">
+                            <span class="luck-title">☘ Удача <strong id="luck-value">x1.0</strong></span>
+                            <span class="luck-bar"><span class="luck-fill" id="luck-fill"></span></span>
+                            <span class="luck-chance">Шанс токена: <strong id="token-chance">1%</strong></span>
+                        </div>
+                        <div class="hud-counter">
+                            <span>Скринь</span>
+                            <strong id="chests-opened">0</strong>
+                        </div>
+                    </div>
                 </div>
+                <p class="map-hint">Порада: не поспішай. Поки карта на екрані, удача росте (до x10),
+                    а кожна відкрита скриня скидає її до x1.</p>
             </div>
         </section>
 
@@ -218,8 +277,27 @@
             </div>
         </section>
 
+        <!-- Секція: Колекція скарбів (заповнює script.js) -->
+        <section id="collection" class="section-alt">
+            <div class="container">
+                <h2 class="section-title">Колекція скарбів</h2>
+                <p class="collection-intro">Як в івенті <em>Treasure Hunters</em>: відкривай скрині на карті та збирай
+                    скарби. Найрідкісніший — золотий токен <strong>Pirate Shop Access</strong>. У справжньому Fortnite
+                    шанс знайти його — <strong>1 до 137 500</strong> за одну скриню.</p>
+
+                <div class="collection-stats">
+                    <span>Знайдено: <strong id="found-count">0</strong> / <strong id="total-count">7</strong></span>
+                    <span>Відкрито скринь: <strong id="opened-count">0</strong></span>
+                    <button type="button" class="btn-reset" id="reset-collection">Скинути колекцію</button>
+                </div>
+
+                <!-- Картки скарбів створює script.js -->
+                <div class="collection-grid" id="collection-grid"></div>
+            </div>
+        </section>
+
         <!-- Секція 6: Форма відгуку (ПР6) -->
-        <section id="contact" class="section-alt">
+        <section id="contact">
             <div class="container">
                 <h2 class="section-title">Залишити відгук</h2>
 
@@ -272,12 +350,30 @@
             <p>Контакти: <a href="https://github.com/Vetal3000Ua" target="_blank">github.com/Vetal3000Ua</a></p>
             <p class="credits">Фото: <a href="https://commons.wikimedia.org/wiki/Category:Fortnite"
                     target="_blank">Wikimedia Commons</a> — Sergey Galyonkin, Official GDC (CC BY 2.0, CC BY-SA 2.0),
-                ITEagle Europe (CC BY-SA 4.0)</p>
+                ITEagle Europe (CC BY-SA 4.0). Скріншот Pirate Shop Access — © Epic Games.</p>
         </div>
     </footer>
 
     <!-- ПР4 + ПР5: плаваюча кнопка нагору -->
     <a href="#hero" class="btn-top" aria-label="Повернутися на початок сторінки">↑</a>
+
+    <!-- Вікно знахідки зі скрині (показує script.js) -->
+    <div class="loot-popup" id="loot-popup" role="dialog" aria-modal="true" aria-labelledby="loot-name" hidden>
+        <div class="loot-card" id="loot-card">
+            <span class="loot-rays" aria-hidden="true"></span>
+            <p class="loot-found">Ти знайшов</p>
+            <span class="loot-icon" id="loot-icon" aria-hidden="true"></span>
+            <h3 class="loot-name" id="loot-name"></h3>
+            <p class="loot-rarity" id="loot-rarity"></p>
+            <img class="loot-image" id="loot-image" src="images/pirate-shop-access.jpg"
+                alt="Ігровий екран Fortnite з написом You found Pirate Shop Access" hidden>
+            <p class="loot-text" id="loot-text"></p>
+            <div class="loot-actions">
+                <button type="button" class="btn-loot" id="loot-close">Забрати</button>
+                <a href="#collection" class="btn-loot btn-loot-alt" id="loot-to-collection">До колекції</a>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

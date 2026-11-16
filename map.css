@@ -1,0 +1,912 @@
+/* =========================================================
+   map.css — інтерактивна карта острова, скрині, вікно знахідки
+   та колекція скарбів. Основні стилі сайту — у style.css.
+   ========================================================= */
+
+/* Кольори рідкості: одна змінна --rarity на кожен клас */
+.r-common    { --rarity: #9ca3af; }
+.r-uncommon  { --rarity: #22c55e; }
+.r-rare      { --rarity: #3b82f6; }
+.r-epic      { --rarity: #a855f7; }
+.r-legendary { --rarity: #f59e0b; }
+.r-mythic    { --rarity: #ffd60a; }
+.r-exotic    { --rarity: #22d3ee; }
+
+/* =========================================================
+   Hero: мерехтливе небо за картою
+   ========================================================= */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Дрібні "зірочки", що повільно пливуть */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 70% 20%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(3px 3px at 85% 65%, rgba(255, 214, 10, 0.7), transparent),
+        radial-gradient(2px 2px at 35% 80%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(2px 2px at 55% 50%, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 300px 300px;
+    animation: sky-drift 40s linear infinite;
+    pointer-events: none;
+}
+
+.hero-section .container {
+    position: relative;
+}
+
+@keyframes sky-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 300px 600px; }
+}
+
+/* =========================================================
+   Карта: вода, рамка та розгортання
+   ========================================================= */
+.map {
+    position: relative;
+    max-width: 860px;
+    height: 520px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 5px solid #e2e8f0;
+    border-radius: 18px;
+    /* Вода навколо острова */
+    background:
+        repeating-radial-gradient(circle at 50% 50%, transparent 0 18px, rgba(255, 255, 255, 0.05) 18px 20px),
+        radial-gradient(circle at 50% 50%, #1d8fe0 0%, #0b4f8a 65%, #062d55 100%);
+    box-shadow: 0 0 0 4px #1e3a8a, 0 30px 60px rgba(0, 0, 0, 0.5);
+    /* Карта "складена": нахилена та зменшена */
+    transform: perspective(1200px) rotateX(35deg) scale(0.88);
+    transition: transform 0.7s ease, box-shadow 0.7s ease;
+    /* Ефект появи при завантаженні сторінки */
+    animation: map-unfold 1.2s ease-out backwards;
+}
+
+/* Карта "розгортається" при наведенні */
+.map:hover {
+    transform: perspective(1200px) rotateX(0deg) scale(1);
+    box-shadow: 0 0 0 4px #ffd60a, 0 0 40px rgba(255, 214, 10, 0.35), 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes map-unfold {
+    from {
+        opacity: 0;
+        transform: perspective(1200px) rotateX(75deg) scale(0.5);
+    }
+}
+
+/* =========================================================
+   Острів та біоми
+   ========================================================= */
+.map-island {
+    position: absolute;
+    top: 9%;
+    left: 11%;
+    width: 78%;
+    height: 82%;
+    /* Неправильна форма острова через різні радіуси */
+    border-radius: 44% 56% 52% 48% / 48% 42% 58% 52%;
+    background:
+        radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.08) 0 10%, transparent 11%),
+        linear-gradient(160deg, #4ade80 0%, #22c55e 45%, #15803d 100%);
+    /* Пляж + мілководдя */
+    box-shadow:
+        0 0 0 7px #fde68a,
+        0 0 0 14px rgba(253, 230, 138, 0.35),
+        0 0 40px 22px rgba(56, 189, 248, 0.45);
+}
+
+.biome {
+    position: absolute;
+    filter: blur(1px);
+}
+
+.biome-snow {
+    top: 3%;
+    left: 6%;
+    width: 34%;
+    height: 36%;
+    border-radius: 50% 40% 55% 45%;
+    background: radial-gradient(circle at 40% 40%, #ffffff, #dbeafe 55%, #93c5fd);
+}
+
+.biome-forest {
+    top: 30%;
+    left: 36%;
+    width: 30%;
+    height: 34%;
+    border-radius: 45% 55% 40% 60%;
+    background:
+        radial-gradient(circle at 30% 30%, #166534 0 12%, transparent 13%),
+        radial-gradient(circle at 65% 55%, #14532d 0 14%, transparent 15%),
+        radial-gradient(circle at 40% 75%, #166534 0 10%, transparent 11%),
+        #15803d;
+}
+
+.biome-desert {
+    bottom: 3%;
+    right: 4%;
+    width: 38%;
+    height: 40%;
+    border-radius: 55% 45% 40% 60%;
+    background: radial-gradient(circle at 60% 60%, #fcd34d, #f59e0b 70%, #d97706);
+}
+
+.biome-lake {
+    top: 14%;
+    right: 16%;
+    width: 14%;
+    height: 17%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #7dd3fc, #0284c7);
+    box-shadow: 0 0 0 4px rgba(253, 230, 138, 0.8);
+}
+
+/* Річка — вигнута лінія */
+.map-river {
+    position: absolute;
+    top: 28%;
+    left: 52%;
+    width: 40%;
+    height: 50%;
+    border-top: 7px solid #38bdf8;
+    border-left: 7px solid #38bdf8;
+    border-radius: 60% 0 0 0;
+    transform: rotate(-20deg);
+    opacity: 0.85;
+}
+
+/* =========================================================
+   Сітка та координати (як на карті у грі)
+   ========================================================= */
+.map-grid {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+    background-size: 10% 10%;
+    pointer-events: none;
+}
+
+.map-coords {
+    position: absolute;
+    display: flex;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    text-shadow: 0 1px 2px #000000;
+    pointer-events: none;
+}
+
+.map-coords span {
+    flex: 1;
+    text-align: center;
+}
+
+.map-coords-x {
+    top: 2px;
+    left: 0;
+    width: 100%;
+}
+
+.map-coords-y {
+    top: 0;
+    left: 4px;
+    height: 100%;
+    flex-direction: column;
+}
+
+.map-coords-y span {
+    display: flex;
+    align-items: center;
+}
+
+/* =========================================================
+   Назви локацій
+   ========================================================= */
+.poi {
+    position: absolute;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    /* Чорна обводка тексту з кількох тіней */
+    text-shadow:
+        1px 1px 0 #0f172a, -1px 1px 0 #0f172a,
+        1px -1px 0 #0f172a, -1px -1px 0 #0f172a,
+        0 3px 6px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.poi-snow   { top: 15%; left: 15%; }
+.poi-port   { top: 26%; left: 64%; }
+.poi-canyon { top: 76%; left: 62%; }
+.poi-bay    { top: 74%; left: 15%; }
+
+/* =========================================================
+   Буря
+   ========================================================= */
+.map-storm {
+    position: absolute;
+    top: 5%;
+    left: 13%;
+    width: 74%;
+    height: 90%;
+    border-radius: 50%;
+    border: 3px solid rgba(233, 213, 255, 0.9);
+    /* Усе за межами кола — фіолетова буря */
+    box-shadow:
+        0 0 0 2000px rgba(88, 28, 135, 0.45),
+        inset 0 0 30px rgba(192, 132, 252, 0.55);
+    transition: transform 0.8s ease;
+    pointer-events: none;
+}
+
+/* Пульсуюче світіння краю бурі */
+.map-storm::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 5px solid #e9d5ff;
+    filter: blur(4px);
+    animation: storm-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes storm-pulse {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 1; }
+}
+
+/* При розгортанні карти буря звужується */
+.map:hover .map-storm {
+    transform: scale(0.86);
+}
+
+/* =========================================================
+   Маршрут автобуса та сам автобус
+   ========================================================= */
+.map-bus-route {
+    position: absolute;
+    top: 52%;
+    left: -10%;
+    width: 120%;
+    border-top: 3px dashed rgba(255, 214, 10, 0.9);
+    transform: rotate(-24deg);
+    pointer-events: none;
+}
+
+.map-bus {
+    position: absolute;
+    top: -18px;
+    left: 0;
+    font-size: 26px;
+    /* Емодзі дивиться вліво — дзеркалимо */
+    transform: scaleX(-1);
+    filter: drop-shadow(0 0 6px rgba(255, 214, 10, 0.9));
+    animation: bus-fly 14s linear infinite;
+}
+
+@keyframes bus-fly {
+    from { left: 0%; }
+    to   { left: 100%; }
+}
+
+/* =========================================================
+   Точки висадки
+   ========================================================= */
+.map-point {
+    position: absolute;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    background-color: #ffd60a;
+    border: 3px solid #0f172a;
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Кільце, що розходиться від точки */
+.map-point::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 3px solid #ffd60a;
+    animation: point-ping 2s ease-out infinite;
+}
+
+@keyframes point-ping {
+    from { transform: scale(1); opacity: 0.9; }
+    to   { transform: scale(2.4); opacity: 0; }
+}
+
+.map-point:hover {
+    transform: scale(1.3);
+    background-color: #ffffff;
+    text-decoration: none;
+}
+
+.point-label {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2px 8px;
+    background-color: rgba(15, 23, 42, 0.9);
+    border: 1px solid #ffd60a;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.point-about     { top: 30%; left: 38%; }
+.point-mechanics { top: 46%; left: 60%; }
+.point-weapons   { top: 60%; left: 30%; }
+.point-gallery   { top: 18%; left: 52%; }
+.point-contact   { top: 70%; left: 50%; }
+
+/* =========================================================
+   Скрині
+   ========================================================= */
+.map-chest {
+    position: absolute;
+    z-index: 3;
+    width: 30px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    /* Кришка, замок і корпус — градієнтом */
+    background:
+        linear-gradient(90deg, transparent 42%, #fef08a 42% 58%, transparent 58%) center 30% / 100% 30% no-repeat,
+        linear-gradient(#fbbf24 0 38%, #78350f 38% 46%, #f59e0b 46% 100%);
+    border: 2px solid #78350f;
+    border-radius: 7px 7px 3px 3px;
+    box-shadow: 0 0 10px 3px rgba(250, 204, 21, 0.6);
+    animation: chest-glow 1.6s ease-in-out infinite alternate;
+    transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+.map-chest:hover {
+    transform: scale(1.25);
+}
+
+.map-chest:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+
+@keyframes chest-glow {
+    from { box-shadow: 0 0 6px 2px rgba(250, 204, 21, 0.45); }
+    to   { box-shadow: 0 0 18px 7px rgba(250, 204, 21, 0.9); }
+}
+
+/* Скриня трясеться перед відкриттям */
+.map-chest.is-shaking {
+    animation: chest-shake 0.12s linear infinite;
+}
+
+/* Якщо всередині легендарна річ — сяє золотом (як у грі) */
+.map-chest.is-shaking.is-jackpot {
+    box-shadow: 0 0 35px 16px rgba(255, 214, 10, 0.95);
+}
+
+@keyframes chest-shake {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    25%  { transform: translate(-2px, 1px) rotate(-6deg); }
+    50%  { transform: translate(2px, -1px) rotate(6deg); }
+    75%  { transform: translate(-1px, -1px) rotate(-3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Відкрита скриня — сіра, поки не з'явиться знову */
+.map-chest.is-opened {
+    filter: grayscale(1) brightness(0.6);
+    animation: none;
+    box-shadow: none;
+    cursor: default;
+    pointer-events: none;
+}
+
+.chest-1 { top: 36%; left: 21%; }
+.chest-2 { top: 54%; left: 44%; }
+.chest-3 { top: 38%; left: 76%; }
+.chest-4 { top: 84%; left: 34%; }
+.chest-5 { top: 63%; left: 72%; }
+
+/* =========================================================
+   HUD: удача та лічильник
+   ========================================================= */
+.map-hud {
+    position: absolute;
+    left: 28px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 4;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.luck,
+.hud-counter {
+    background-color: rgba(15, 23, 42, 0.88);
+    border: 2px solid rgba(255, 214, 10, 0.6);
+    border-radius: 10px;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.luck {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 240px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.luck-title strong {
+    color: #ffd60a;
+}
+
+.luck-bar {
+    display: block;
+    height: 10px;
+    background-color: #334155;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.luck-fill {
+    display: block;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #ffd60a, #f97316);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.luck-chance {
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+.luck-chance strong {
+    color: #ffd60a;
+}
+
+/* Максимальна удача — HUD сяє */
+.luck.is-max {
+    border-color: #ffd60a;
+    animation: hud-glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes hud-glow {
+    from { box-shadow: 0 0 6px rgba(255, 214, 10, 0.4); }
+    to   { box-shadow: 0 0 22px rgba(255, 214, 10, 0.95); }
+}
+
+.hud-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 14px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.hud-counter strong {
+    font-size: 22px;
+    color: #ffd60a;
+    line-height: 1.1;
+}
+
+.map-hint {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* =========================================================
+   Вікно знахідки
+   ========================================================= */
+.loot-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background-color: rgba(2, 6, 23, 0.78);
+    backdrop-filter: blur(4px);
+}
+
+/* Атрибут hidden має сховати вікно, хоча display: flex */
+.loot-popup[hidden] {
+    display: none;
+}
+
+.loot-card {
+    position: relative;
+    overflow: hidden;
+    width: 420px;
+    max-width: 100%;
+    padding: 30px 24px 24px;
+    text-align: center;
+    color: #ffffff;
+    border: 3px solid var(--rarity);
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 0%, var(--rarity) 0%, #0f172a 65%);
+    box-shadow: 0 0 40px var(--rarity);
+    animation: loot-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+@keyframes loot-pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Промені, що обертаються за предметом */
+.loot-rays {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-conic-gradient(from 0deg, transparent 0deg 10deg, rgba(255, 255, 255, 0.07) 10deg 20deg);
+    animation: rays-spin 14s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rays-spin {
+    to { transform: rotate(360deg); }
+}
+
+.loot-card > *:not(.loot-rays) {
+    position: relative;
+}
+
+.loot-found {
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #e2e8f0;
+}
+
+.loot-icon {
+    display: block;
+    font-size: 72px;
+    line-height: 1.2;
+    animation: icon-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes icon-bounce {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50%      { transform: translateY(-8px) rotate(4deg); }
+}
+
+.loot-name {
+    margin-bottom: 4px;
+    font-size: 26px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.loot-rarity {
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rarity);
+}
+
+.loot-image {
+    width: 100%;
+    max-height: 30vh;
+    object-fit: cover;
+    margin: 10px 0;
+    border: 2px solid #ffd60a;
+    border-radius: 8px;
+}
+
+/* img має display: block у style.css, тому hidden треба підтримати явно */
+.loot-image[hidden] {
+    display: none;
+}
+
+.loot-text {
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.loot-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.btn-loot {
+    min-height: 44px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0f172a;
+    background-image: linear-gradient(to right, #ffd60a, #f59e0b);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-loot:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(255, 214, 10, 0.35);
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.btn-loot-alt {
+    display: inline-flex;
+    align-items: center;
+    color: #ffffff;
+    background-image: none;
+    border: 2px solid #ffffff;
+}
+
+.btn-loot-alt:hover {
+    color: #ffffff;
+}
+
+/* Золотий токен — особлива картка з мерехтінням */
+.loot-card.r-mythic {
+    box-shadow: 0 0 60px 10px rgba(255, 214, 10, 0.7);
+}
+
+.loot-card.r-mythic .loot-name {
+    background: linear-gradient(90deg, #fde68a, #ffd60a, #fff7cc, #f59e0b);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gold-shine 2s linear infinite;
+}
+
+@keyframes gold-shine {
+    to { background-position: 200% 0; }
+}
+
+/* =========================================================
+   Колекція скарбів
+   ========================================================= */
+.collection-intro {
+    max-width: 720px;
+    margin: 0 auto 25px;
+    text-align: center;
+}
+
+.collection-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.collection-stats span {
+    padding: 8px 16px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 20px;
+}
+
+.collection-stats strong {
+    color: #ffd60a;
+}
+
+.btn-reset {
+    min-height: 44px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fca5a5;
+    background: transparent;
+    border: 2px solid #f87171;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-reset:hover {
+    background-color: #f87171;
+    color: #0f172a;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.treasure-card {
+    position: relative;
+    padding: 20px 12px 16px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), #1e293b 70%);
+    border: 2px solid var(--rarity);
+    border-bottom-width: 6px;
+    border-radius: 12px;
+    box-shadow: 0 0 16px -4px var(--rarity);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.treasure-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 26px -2px var(--rarity);
+}
+
+.treasure-icon {
+    display: block;
+    font-size: 44px;
+    line-height: 1.3;
+}
+
+.treasure-name {
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.treasure-rarity {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--rarity);
+}
+
+.treasure-chance {
+    margin-bottom: 0;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.treasure-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 1px 8px;
+    font-size: 12px;
+    font-weight: 900;
+    color: #0f172a;
+    background-color: var(--rarity);
+    border-radius: 10px;
+}
+
+/* Ще не знайдений скарб — силует */
+.treasure-card.is-locked {
+    border-color: #334155;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+.treasure-card.is-locked .treasure-icon {
+    filter: grayscale(1) brightness(0.3);
+}
+
+/* Знайдений золотий токен — переливається золотом */
+.treasure-card.r-mythic:not(.is-locked) {
+    background: linear-gradient(120deg, #78350f, #ca8a04, #fde68a, #ca8a04, #78350f);
+    background-size: 300% 100%;
+    animation: gold-shine 3s linear infinite;
+}
+
+.treasure-card.r-mythic:not(.is-locked) .treasure-chance {
+    color: #422006;
+}
+
+/* =========================================================
+   ПР8: адаптивність карти та колекції
+   ========================================================= */
+@media screen and (max-width: 1024px) {
+    .map {
+        height: 460px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* На телефоні немає наведення — карта одразу розгорнута */
+    .map,
+    .map:hover {
+        height: 500px;
+        transform: none;
+        animation: none;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .luck {
+        width: 160px;
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .luck-chance {
+        font-size: 11px;
+    }
+
+    .poi {
+        font-size: 9px;
+        letter-spacing: 0;
+    }
+
+    .poi-snow   { left: 10%; }
+    .poi-port   { left: 56%; }
+    .poi-canyon { top: 74%; left: 52%; }
+    .poi-bay    { top: 70%; left: 8%; }
+
+    /* Нижня скриня вище, щоб її не закривала панель удачі */
+    .chest-4 {
+        top: 76%;
+        left: 30%;
+    }
+
+    .map-chest {
+        width: 34px;
+        height: 28px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .map,
+    .map:hover {
+        height: 460px;
+    }
+
+    .point-label {
+        font-size: 10px;
+    }
+
+    .map-coords {
+        font-size: 9px;
+    }
+
+    .hud-counter {
+        padding: 4px 8px;
+    }
+
+    .loot-name {
+        font-size: 20px;
+    }
+}
+
+/* Для тих, хто вимкнув анімації в системі */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

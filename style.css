@@ -311,122 +311,7 @@ section {
     color: #ffd60a;
 }
 
-/* =========================================================
-   Карта острова (ПР4: relative + absolute, ПР7: transform)
-   ========================================================= */
-.map {
-    position: relative;
-    max-width: 760px;
-    height: 460px;
-    margin: 0 auto;
-    overflow: hidden;
-    border: 6px solid #ffffff;
-    border-radius: 16px;
-    /* Сітка карти + острів + вода (градієнти ПР7) */
-    background:
-        linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-        radial-gradient(circle at 30% 32%, #f1f5f9 0%, #cbd5e1 6%, transparent 7%),
-        radial-gradient(circle at 68% 62%, #a3e635 0%, #65a30d 9%, transparent 10%),
-        radial-gradient(ellipse 42% 40% at 50% 50%, #22c55e 0%, #16a34a 88%, #fde68a 92%, #38bdf8 97%, #0369a1 140%);
-    background-size: 10% 10%, 10% 10%, 100% 100%, 100% 100%, 100% 100%;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
-    /* Карта "складена": нахилена та зменшена */
-    transform: perspective(1000px) rotateX(45deg) scale(0.85);
-    transition: transform 0.6s ease, box-shadow 0.6s ease;
-}
-
-/* Карта "розгортається" при наведенні */
-.map:hover {
-    transform: perspective(1000px) rotateX(0deg) scale(1);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-}
-
-/* Буря: все за межами кола затемнюється фіолетовим */
-.map-storm {
-    position: absolute;
-    top: 8%;
-    left: 18%;
-    width: 64%;
-    height: 84%;
-    border: 4px solid #c084fc;
-    border-radius: 50%;
-    box-shadow: 0 0 0 1000px rgba(126, 34, 206, 0.35);
-    transition: transform 0.6s ease;
-}
-
-/* При розгортанні карти буря звужується */
-.map:hover .map-storm {
-    transform: scale(0.85);
-}
-
-/* Маршрут автобуса — пунктирна лінія */
-.map-bus-route {
-    position: absolute;
-    top: 50%;
-    left: -10%;
-    width: 120%;
-    border-top: 3px dashed #ffd60a;
-    transform: rotate(-25deg);
-}
-
-/* Точки висадки на карті */
-.map-point {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    background-color: #ffd60a;
-    border: 3px solid #0f172a;
-    border-radius: 50%;
-    box-shadow: 0 0 0 4px rgba(255, 214, 10, 0.4);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.map-point:hover {
-    transform: scale(1.25);
-    background-color: #ffffff;
-    text-decoration: none;
-}
-
-/* Підпис точки — над кружечком */
-.point-label {
-    position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 2px 8px;
-    background-color: #0f172a;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 4px;
-    white-space: nowrap;
-}
-
-.point-about {
-    top: 30%;
-    left: 38%;
-}
-
-.point-mechanics {
-    top: 44%;
-    left: 60%;
-}
-
-.point-weapons {
-    top: 62%;
-    left: 30%;
-}
-
-.point-gallery {
-    top: 24%;
-    left: 60%;
-}
-
-.point-contact {
-    top: 72%;
-    left: 52%;
-}
+/* Стилі карти, скринь і колекції — у файлі map.css */
 
 /* =========================================================
    ПР4: Grid для карток та галереї
@@ -661,10 +546,6 @@ footer {
     .hero-section h1 {
         font-size: 44px;
     }
-
-    .map {
-        height: 400px;
-    }
 }
 
 /* =========================================================
@@ -710,17 +591,6 @@ footer {
         display: block;
         margin-bottom: 8px;
     }
-
-    /* На телефоні немає наведення — карта одразу розгорнута */
-    .map {
-        height: 320px;
-        transform: none;
-    }
-
-    .map-point {
-        width: 32px;
-        height: 32px;
-    }
 }
 
 /* =========================================================
@@ -750,10 +620,6 @@ footer {
     .badge {
         top: -8px;
         right: 10px;
-        font-size: 11px;
-    }
-
-    .point-label {
         font-size: 11px;
     }
 
