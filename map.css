@@ -10,7 +10,7 @@
 .r-epic      { --rarity: #a855f7; }
 .r-legendary { --rarity: #f59e0b; }
 .r-mythic    { --rarity: #ffd60a; }
-.r-exotic    { --rarity: #22d3ee; }
+.r-series    { --rarity: #22d3ee; }
 
 /* =========================================================
    Hero: мерехтливе небо за картою
@@ -591,11 +591,25 @@
     color: #e2e8f0;
 }
 
-.loot-icon {
-    display: block;
-    font-size: 72px;
-    line-height: 1.2;
+/* Картинка предмета у вікні */
+.loot-picture {
+    width: 200px;
+    height: 200px;
+    margin: 6px auto 10px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.5));
     animation: icon-bounce 1.6s ease-in-out infinite;
+}
+
+/* Скріншот токена — широкий, без підстрибування */
+.loot-picture.is-wide {
+    width: 100%;
+    height: auto;
+    max-height: 30vh;
+    object-fit: cover;
+    border: 2px solid #ffd60a;
+    border-radius: 8px;
+    animation: none;
 }
 
 @keyframes icon-bounce {
@@ -618,20 +632,6 @@
     color: var(--rarity);
 }
 
-.loot-image {
-    width: 100%;
-    max-height: 30vh;
-    object-fit: cover;
-    margin: 10px 0;
-    border: 2px solid #ffd60a;
-    border-radius: 8px;
-}
-
-/* img має display: block у style.css, тому hidden треба підтримати явно */
-.loot-image[hidden] {
-    display: none;
-}
-
 .loot-text {
     font-size: 14px;
     color: #cbd5e1;
@@ -639,6 +639,7 @@
 
 .loot-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
     margin-top: 16px;
@@ -668,12 +669,18 @@
     display: inline-flex;
     align-items: center;
     color: #ffffff;
+    background-color: transparent;
     background-image: none;
     border: 2px solid #ffffff;
 }
 
 .btn-loot-alt:hover {
     color: #ffffff;
+}
+
+/* Атрибут hidden має ховати кнопку, хоча display задано вище */
+.btn-loot[hidden] {
+    display: none;
 }
 
 /* Золотий токен — особлива картка з мерехтінням */
@@ -741,42 +748,173 @@
     color: #0f172a;
 }
 
-.collection-grid {
+/* ---------- Лоадаут ---------- */
+.loadout {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    max-width: 720px;
+    margin: 0 auto 30px;
 }
 
-.treasure-card {
+.loadout-slot {
     position: relative;
-    padding: 20px 12px 16px;
-    text-align: center;
-    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), #1e293b 70%);
-    border: 2px solid var(--rarity);
-    border-bottom-width: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1.15;
+    padding: 6px;
+    color: #ffffff;
+    background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.12), #0f172a 75%);
+    border: 2px dashed #475569;
     border-radius: 12px;
-    box-shadow: 0 0 16px -4px var(--rarity);
+    cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.treasure-card:hover {
-    transform: translateY(-6px);
+.loadout-slot[class*="r-"] {
+    border: 2px solid var(--rarity);
+    box-shadow: 0 0 14px -4px var(--rarity);
+}
+
+.loadout-slot:hover:not(:disabled) {
+    transform: translateY(-4px);
+}
+
+.loadout-slot:disabled {
+    cursor: default;
+}
+
+.loadout-slot img {
+    width: 100%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.loadout-empty {
+    font-size: 30px;
+    color: #475569;
+}
+
+.loadout-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #cbd5e1;
+}
+
+/* ---------- Вкладки ---------- */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.tab {
+    min-height: 44px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #cbd5e1;
+    background-color: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    cursor: pointer;
+    /* Скошена форма кнопки як у меню Fortnite */
+    transform: skewX(-8deg);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.tab:hover {
+    color: #ffffff;
+    border-color: #ffd60a;
+}
+
+.tab.is-active {
+    color: #0f172a;
+    background-color: #ffd60a;
+    border-color: #ffd60a;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.filters select {
+    width: auto;
+    margin-bottom: 0;
+    padding: 8px 10px;
+}
+
+.pool-info {
+    margin-left: auto;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.empty-note {
+    text-align: center;
+    color: #94a3b8;
+}
+
+.empty-note[hidden] {
+    display: none;
+}
+
+/* ---------- Картки предметів і духів ---------- */
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+.item-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 12px 10px 14px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: #ffffff;
+    /* Фон у кольорі рідкості, як у шафці Fortnite */
+    background: radial-gradient(circle at 50% 25%, var(--rarity) -40%, #1e293b 75%);
+    border: 2px solid var(--rarity);
+    border-bottom-width: 6px;
+    border-radius: 12px;
+    box-shadow: 0 0 14px -4px var(--rarity);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-6px) scale(1.02);
     box-shadow: 0 0 26px -2px var(--rarity);
 }
 
-.treasure-icon {
-    display: block;
-    font-size: 44px;
+.item-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+
+.item-name {
+    margin-bottom: 2px;
+    font-size: 14px;
     line-height: 1.3;
 }
 
-.treasure-name {
-    font-size: 15px;
+.item-rarity {
     margin-bottom: 2px;
-}
-
-.treasure-rarity {
-    margin-bottom: 4px;
     font-size: 11px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -784,44 +922,154 @@
     color: var(--rarity);
 }
 
-.treasure-chance {
+.item-note {
     margin-bottom: 0;
     font-size: 12px;
     color: #94a3b8;
 }
 
-.treasure-count {
+.item-equipped {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 6px;
+    left: 6px;
     padding: 1px 8px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     color: #0f172a;
-    background-color: var(--rarity);
+    background-color: #ffd60a;
     border-radius: 10px;
 }
 
-/* Ще не знайдений скарб — силует */
-.treasure-card.is-locked {
+/* Ще не знайдений дух — чорний силует */
+.item-card.is-locked {
+    cursor: default;
     border-color: #334155;
+    background: #1e293b;
     box-shadow: none;
-    opacity: 0.6;
 }
 
-.treasure-card.is-locked .treasure-icon {
-    filter: grayscale(1) brightness(0.3);
+.item-card.is-locked:hover {
+    transform: none;
+}
+
+.item-card.is-locked img {
+    filter: brightness(0) opacity(0.55);
 }
 
 /* Знайдений золотий токен — переливається золотом */
-.treasure-card.r-mythic:not(.is-locked) {
+.item-card.r-mythic {
     background: linear-gradient(120deg, #78350f, #ca8a04, #fde68a, #ca8a04, #78350f);
     background-size: 300% 100%;
     animation: gold-shine 3s linear infinite;
 }
 
-.treasure-card.r-mythic:not(.is-locked) .treasure-chance {
+.item-card.r-mythic img {
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.item-card.r-mythic .item-rarity,
+.item-card.r-mythic .item-note {
     color: #422006;
+}
+
+/* ---------- Трекер Fortnite ---------- */
+.tracker {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 20px;
+    margin-bottom: 24px;
+    padding: 18px 22px;
+    background-color: #0f172a;
+    border: 2px solid #334155;
+    border-left: 6px solid #22c55e;
+    border-radius: 12px;
+}
+
+.tracker p {
+    margin-bottom: 0;
+}
+
+.tracker strong {
+    color: #ffd60a;
+}
+
+/* Зелена «жива» точка, що пульсує */
+.live-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    animation: hud-glow 1s ease-in-out infinite alternate;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.news-card {
+    overflow: hidden;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+}
+
+.news-card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.news-card h3 {
+    margin: 12px 14px 6px;
+    font-size: 17px;
+}
+
+.news-card p {
+    margin: 0 14px 14px;
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+/* ---------- HUD: рядок духа ---------- */
+.luck-sprite {
+    font-size: 12px;
+    color: #a7f3d0;
+}
+
+/* ---------- Сповіщення ---------- */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 90px;
+    z-index: 2100;
+    width: max-content;
+    max-width: 90vw;
+    padding: 12px 20px;
+    font-weight: bold;
+    color: #0f172a;
+    background: linear-gradient(to right, #ffd60a, #f59e0b);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    transform: translateX(-50%);
+    animation: toast-in 0.4s ease-out;
+}
+
+.toast[hidden] {
+    display: none;
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translate(-50%, 20px); }
 }
 
 /* =========================================================
@@ -830,6 +1078,10 @@
 @media screen and (max-width: 1024px) {
     .map {
         height: 460px;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -843,7 +1095,20 @@
     }
 
     .collection-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .news-grid,
+    .tracker {
+        grid-template-columns: 1fr;
+    }
+
+    .loadout {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .pool-info {
+        margin-left: 0;
     }
 
     .luck {
@@ -882,6 +1147,20 @@
     .map,
     .map:hover {
         height: 460px;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tab {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+
+    .loot-picture {
+        width: 150px;
+        height: 150px;
     }
 
     .point-label {

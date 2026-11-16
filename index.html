@@ -27,7 +27,8 @@
     <!-- Стилі інтерактивної карти, скринь і колекції -->
     <link rel="stylesheet" href="map.css">
 
-    <!-- Логіка скринь і колекції (defer — запуститься після завантаження HTML) -->
+    <!-- Логіка скринь і колекції (defer — запуститься після завантаження HTML, по черзі) -->
+    <script src="sprites.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 
@@ -124,6 +125,7 @@
                             <span class="luck-title">☘ Удача <strong id="luck-value">x1.0</strong></span>
                             <span class="luck-bar"><span class="luck-fill" id="luck-fill"></span></span>
                             <span class="luck-chance">Шанс токена: <strong id="token-chance">1%</strong></span>
+                            <span class="luck-sprite" id="luck-sprite">Дух: не екіпіровано</span>
                         </div>
                         <div class="hud-counter">
                             <span>Скринь</span>
@@ -281,18 +283,63 @@
         <section id="collection" class="section-alt">
             <div class="container">
                 <h2 class="section-title">Колекція скарбів</h2>
-                <p class="collection-intro">Як в івенті <em>Treasure Hunters</em>: відкривай скрині на карті та збирай
-                    скарби. Найрідкісніший — золотий токен <strong>Pirate Shop Access</strong>. У справжньому Fortnite
-                    шанс знайти його — <strong>1 до 137 500</strong> за одну скриню.</p>
+                <p class="collection-intro">Як в івенті <em>Treasure Hunters</em>: у скринях на карті лежать справжні
+                    предмети з <strong>сьогоднішнього магазину Fortnite</strong> та найновіші предмети гри — вони
+                    оновлюються самі. Предмети не повторюються. Іноді у скрині сидить <strong>дух</strong>, а
+                    найрідкісніше — золотий токен <strong>Pirate Shop Access</strong> (у грі шанс 1 до 137 500).</p>
 
                 <div class="collection-stats">
-                    <span>Знайдено: <strong id="found-count">0</strong> / <strong id="total-count">7</strong></span>
+                    <span>Предметів: <strong id="items-count">0</strong></span>
+                    <span>Духів: <strong id="sprites-count">0</strong> / <strong id="sprites-total">25</strong></span>
                     <span>Відкрито скринь: <strong id="opened-count">0</strong></span>
                     <button type="button" class="btn-reset" id="reset-collection">Скинути колекцію</button>
                 </div>
 
-                <!-- Картки скарбів створює script.js -->
-                <div class="collection-grid" id="collection-grid"></div>
+                <!-- Лоадаут: екіпіровані предмети (клікни слот, щоб подивитись) -->
+                <div class="loadout" id="loadout"></div>
+
+                <!-- Вкладки колекції -->
+                <div class="tabs" role="tablist" aria-label="Розділи колекції">
+                    <button type="button" class="tab is-active" role="tab" aria-selected="true" data-tab="items">Предмети</button>
+                    <button type="button" class="tab" role="tab" aria-selected="false" data-tab="sprites">Духи</button>
+                    <button type="button" class="tab" role="tab" aria-selected="false" data-tab="news">Трекер Fortnite</button>
+                </div>
+
+                <!-- Вкладка: предмети -->
+                <div class="tab-panel" id="panel-items" role="tabpanel">
+                    <div class="filters">
+                        <label for="rarity-filter" class="inline-label">Рідкість:</label>
+                        <select id="rarity-filter">
+                            <option value="all">Усі</option>
+                            <option value="uncommon">Незвичайні</option>
+                            <option value="rare">Рідкісні</option>
+                            <option value="epic">Епічні</option>
+                            <option value="legendary">Легендарні</option>
+                            <option value="series">Серії</option>
+                            <option value="mythic">Золотий токен</option>
+                        </select>
+                        <span class="pool-info" id="pool-info">Завантажую нагороди з Fortnite…</span>
+                    </div>
+                    <div class="collection-grid" id="items-grid"></div>
+                    <p class="empty-note" id="items-empty">Поки порожньо — відкрий скриню на карті!</p>
+                </div>
+
+                <!-- Вкладка: духи -->
+                <div class="tab-panel" id="panel-sprites" role="tabpanel" hidden>
+                    <div class="collection-grid" id="sprites-grid"></div>
+                </div>
+
+                <!-- Вкладка: трекер оновлень і новин Fortnite -->
+                <div class="tab-panel" id="panel-news" role="tabpanel" hidden>
+                    <div class="tracker" id="tracker">
+                        <p><span class="live-dot" aria-hidden="true"></span> Сайт сам перевіряє Fortnite кожні 15 хвилин.</p>
+                        <p>Версія гри: <strong id="tracker-build">—</strong></p>
+                        <p>Нові предмети додано: <strong id="tracker-new">—</strong></p>
+                        <p>Магазин оновлено: <strong id="tracker-shop">—</strong></p>
+                        <p>Остання перевірка: <strong id="tracker-checked">—</strong></p>
+                    </div>
+                    <div class="news-grid" id="news-grid"></div>
+                </div>
             </div>
         </section>
 
@@ -350,30 +397,34 @@
             <p>Контакти: <a href="https://github.com/Vetal3000Ua" target="_blank">github.com/Vetal3000Ua</a></p>
             <p class="credits">Фото: <a href="https://commons.wikimedia.org/wiki/Category:Fortnite"
                     target="_blank">Wikimedia Commons</a> — Sergey Galyonkin, Official GDC (CC BY 2.0, CC BY-SA 2.0),
-                ITEagle Europe (CC BY-SA 4.0). Скріншот Pirate Shop Access — © Epic Games.</p>
+                ITEagle Europe (CC BY-SA 4.0). Скріншот Pirate Shop Access, предмети та духи — © Epic Games.
+                Живі дані — <a href="https://fortnite-api.com" target="_blank">fortnite-api.com</a>, список духів —
+                <a href="https://fortnite.fandom.com/wiki/Sprites" target="_blank">Fortnite Wiki</a>.</p>
         </div>
     </footer>
 
     <!-- ПР4 + ПР5: плаваюча кнопка нагору -->
     <a href="#hero" class="btn-top" aria-label="Повернутися на початок сторінки">↑</a>
 
-    <!-- Вікно знахідки зі скрині (показує script.js) -->
+    <!-- Вікно предмета: знахідка зі скрині або перегляд з колекції (керує script.js) -->
     <div class="loot-popup" id="loot-popup" role="dialog" aria-modal="true" aria-labelledby="loot-name" hidden>
         <div class="loot-card" id="loot-card">
             <span class="loot-rays" aria-hidden="true"></span>
-            <p class="loot-found">Ти знайшов</p>
-            <span class="loot-icon" id="loot-icon" aria-hidden="true"></span>
+            <p class="loot-found" id="loot-found">Ти знайшов</p>
+            <img class="loot-picture" id="loot-picture" src="images/favicon.svg" alt="">
             <h3 class="loot-name" id="loot-name"></h3>
             <p class="loot-rarity" id="loot-rarity"></p>
-            <img class="loot-image" id="loot-image" src="images/pirate-shop-access.jpg"
-                alt="Ігровий екран Fortnite з написом You found Pirate Shop Access" hidden>
             <p class="loot-text" id="loot-text"></p>
             <div class="loot-actions">
                 <button type="button" class="btn-loot" id="loot-close">Забрати</button>
+                <button type="button" class="btn-loot btn-loot-alt" id="loot-equip" hidden>Екіпірувати</button>
                 <a href="#collection" class="btn-loot btn-loot-alt" id="loot-to-collection">До колекції</a>
             </div>
         </div>
     </div>
+
+    <!-- Сповіщення (наприклад, «Fortnite оновився!») -->
+    <div class="toast" id="toast" role="status" hidden></div>
 </body>
 
 </html>
